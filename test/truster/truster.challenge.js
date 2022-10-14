@@ -38,7 +38,7 @@ describe('[Challenge] Truster', function () {
          */
 	const AttackerFactory = await ethers.getContractFactory('TrusterAttacker', attacker);
         this.attackerContract = await AttackerFactory.deploy(this.pool.address, this.token.address);
-        this.attackerContract.attack(attacker.address);
+        await this.attackerContract.attack(attacker.address);
     });
 
     after(async function () {
