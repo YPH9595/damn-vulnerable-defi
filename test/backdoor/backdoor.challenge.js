@@ -46,6 +46,11 @@ describe('[Challenge] Backdoor', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        attacker = await (await ethers.getContractFactory('BackdoorExploit', player)).deploy(
+            walletRegistry.address, 
+            users,
+            {gasLimit: 1e7}
+        );
     });
 
     after(async function () {
